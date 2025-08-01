@@ -325,14 +325,14 @@
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
-            background: #fff;
+            background: transparent;
             box-shadow: inset 2px 2px 2px rgba(0,0,0,0.1);
             border-bottom: 2px solid #111;
             display: flex;
             flex-direction: column;
         }
         .chat-message {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             line-height: 1.6;
             padding: 6px 10px;
             border-radius: 8px;
@@ -556,40 +556,51 @@
             100% { color: var(--fg-color); text-shadow: 0 0 5px var(--fg-color); }
         }
         #xo-fullscreen-container #xo-piece-tracker { display: flex; justify-content: space-around; width: 100%; font-size: 0.8rem; }
-        #xo-fullscreen-container #xo-player-role-display { margin-top: 10px; font-size: 0.8rem; color: var(--accent-color); }
+        #xo-fullscreen-container #xo-player-role-display {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
 
         /* --- XO GAME CHAT STYLES --- */
         #xo-chat-container {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: 300px;
-            height: 150px;
+            bottom: 100px;
+            left: 10px;
+            width: 280px;
+            height: 120px;
             border: 2px solid var(--fg-color);
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0,0,0,0.7);
             display: flex;
             flex-direction: column;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             z-index: 1;
         }
         #xo-chat-messages {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 10px;
+            padding: 5px 8px;
             display: flex;
-            flex-direction: column-reverse; /* New messages at the bottom */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE and Edge */
+            flex-direction: column-reverse; 
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
         }
         #xo-chat-messages::-webkit-scrollbar {
             display: none;
         }
         #xo-chat-messages .chat-message {
-            margin-bottom: 5px;
+            background-color: transparent;
+            padding: 1px 0;
+            margin-bottom: 2px;
             line-height: 1.4;
+            max-width: 100%;
+            word-wrap: break-word;
         }
         #xo-chat-messages .chat-message .username {
             font-weight: bold;
+            margin-right: 5px;
         }
         #xo-chat-messages .chat-message .username.X { color: var(--x-color); }
         #xo-chat-messages .chat-message .username.O { color: var(--o-color); }
@@ -1251,6 +1262,7 @@
                         </div>
                     </div>
                     <div id="xo-page2" class="page hidden">
+                        <div id="xo-player-role-display"></div>
                         <div id="xo-game-container">
                             <div id="xo-status-display">Player X's Turn</div>
                             <div id="xo-piece-tracker">
@@ -1261,7 +1273,6 @@
                                 ${Array(9).fill(0).map((_, i) => `<div class="cell" data-cell-index="${i}"></div>`).join('')}
                             </div>
                             <button id="xo-next-round-btn" class="btn hidden">Next Round</button>
-                            <div id="xo-player-role-display"></div>
                         </div>
                         <div id="xo-chat-container">
                             <div id="xo-chat-messages"></div>
