@@ -377,7 +377,7 @@
         }
 
         /* --- ENHANCED FINAL POPUP & RETRO AUDIO CONTROLS --- */
-        .final-popup-special { 
+        .final-popup-special; { 
             width: 90%; max-width: 650px; 
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); 
             border: 3px solid #FFB3C1; 
@@ -616,16 +616,6 @@
             body {
                 background-size: 15px 15px;
                 background-position: 0 0, 0 7.5px, 7.5px -7.5px, -7.5px 0px;
-            }
-            #xo-fullscreen-container {
-                flex-direction: column;
-            }
-            #xo-chat-container {
-                position: relative;
-                width: 100%;
-                height: 150px;
-                bottom: 0;
-                left: 0;
             }
         }
 
@@ -1368,7 +1358,7 @@
                     });
 
                     if (localGameState.winner) {
-                        statusDisplay.textContent = `Player ${localGameState.winner} Wins!`;
+                        statusDisplay.textContent = `Player ${localGameState.winner}'s Wins!`;
                         statusDisplay.classList.add('celebrate');
                         nextRoundBtn.classList.remove('hidden');
                     } else if (!localGameState.gameActive) {
@@ -1472,7 +1462,7 @@
 
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('chat-message');
-                    messageDiv.dataset.key = messageKey; // Add key for removal
+                    messageDiv.classList.add(message.username === myRole ? 'sent' : 'received');
                     messageDiv.innerHTML = `<span class="username ${message.username}">${message.username}:</span> ${message.text}`;
                     chatMessagesContainer.prepend(messageDiv);
                 });
@@ -1822,28 +1812,3 @@
     </script>
 </body>
 </html>
-
-</final_file_content>
-
-IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
-
-<environment_details>
-# VSCode Visible Files
-index.html
-
-# VSCode Open Tabs
-index.html
-
-# Recently Modified Files
-These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
-index.html
-
-# Current Time
-8/1/2025, 6:58:33 AM (Africa/Casablanca, UTC+1:00)
-
-# Context Window Usage
-183,287 / 1,048.576K tokens used (17%)
-
-# Current Mode
-ACT MODE
-</environment_details>
