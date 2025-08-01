@@ -532,7 +532,7 @@
         }
         #xo-fullscreen-container .btn:hover { background-color: var(--fg-color); color: var(--bg-color); box-shadow: 0 0 10px var(--fg-color); }
         #xo-fullscreen-container .btn:disabled { color: #555; border-color: #555; cursor: not-allowed; }
-        #xo-fullscreen-container #xo-game-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        #xo-fullscreen-container #xo-game-container { display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; z-index: 2; }
         #xo-fullscreen-container #xo-status-display { font-size: 1rem; height: 30px; line-height: 1.5; }
         #xo-fullscreen-container #xo-game-board {
             display: grid;
@@ -558,11 +558,74 @@
         #xo-fullscreen-container #xo-piece-tracker { display: flex; justify-content: space-around; width: 100%; font-size: 0.8rem; }
         #xo-fullscreen-container #xo-player-role-display { margin-top: 10px; font-size: 0.8rem; color: var(--accent-color); }
 
+        /* --- XO GAME CHAT STYLES --- */
+        #xo-chat-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            height: 150px;
+            border: 2px solid var(--fg-color);
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            z-index: 1;
+        }
+        #xo-chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column-reverse; /* New messages at the bottom */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        #xo-chat-messages::-webkit-scrollbar {
+            display: none;
+        }
+        #xo-chat-messages .chat-message {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        #xo-chat-messages .chat-message .username {
+            font-weight: bold;
+        }
+        #xo-chat-messages .chat-message .username.X { color: var(--x-color); }
+        #xo-chat-messages .chat-message .username.O { color: var(--o-color); }
+        #xo-chat-input-form {
+            display: flex;
+            border-top: 2px solid var(--fg-color);
+        }
+        #xo-chat-input {
+            flex-grow: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--fg-color);
+            padding: 8px;
+            font-family: inherit;
+            font-size: 0.8rem;
+        }
+        #xo-chat-input:focus {
+            outline: none;
+            background-color: #222;
+        }
+
         /* --- MOBILE ADAPTIVE BACKGROUND --- */
         @media (max-width: 600px) {
             body {
                 background-size: 15px 15px;
                 background-position: 0 0, 0 7.5px, 7.5px -7.5px, -7.5px 0px;
+            }
+            #xo-fullscreen-container {
+                flex-direction: column;
+            }
+            #xo-chat-container {
+                position: relative;
+                width: 100%;
+                height: 150px;
+                bottom: 0;
+                left: 0;
             }
         }
 
@@ -632,7 +695,6 @@
     <div id="entry-wrapper">
         <div class="window" id="password-window"></div>
     </div>
-    <div class="window" id="birthday-popup"></div>
 
     <!-- Fullscreen XO Game Container -->
     <div id="xo-fullscreen-container" class="hidden"></div>
@@ -677,11 +739,27 @@
 
         function initializeApp(content) {
 
+            // Convert birthday popup to a memory
+            if (content.birthdayPopup) {
+                const bp = content.birthdayPopup;
+                const birthdayMemory = {
+                    id: 0, // Assign a unique ID
+                    title: bp.title,
+                    text: bp.body,
+                    visual: bp.visual,
+                    position: bp.position
+                };
+                if (!content.memories) {
+                    content.memories = {};
+                }
+                content.memories['0'] = birthdayMemory;
+            }
+
+
             // --- Elements ---
             const entryWrapper = document.getElementById('entry-wrapper');
             const desktopWrapper = document.getElementById('desktop-wrapper');
             const passwordWindow = document.getElementById('password-window');
-            const birthdayPopup = document.getElementById('birthday-popup');
             const memoryPopup = document.getElementById('memory-popup-template');
             const finalPopup = document.getElementById('final-popup');
             const chatWindow = document.getElementById('chat-window');
@@ -699,9 +777,6 @@
             function populateWindows(content) {
                 const pw = content.passwordWindow;
                 passwordWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">${pw.title}</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div class="riddle"><p><em>${pw.riddleTitle}</em></p><p>${pw.riddleBody}</p></div><form id="password-form"><input type="text" id="password-input" placeholder="${pw.inputPlaceholder}" autofocus><div class="error-message" id="error-message">${pw.errorMessage}</div><div style="text-align: right;"><button class="action-button" type="submit">${pw.buttonText}</button></div></form></div>`;
-                
-                const bp = content.birthdayPopup;
-                birthdayPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text">${bp.title}</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body">${bp.body}<div style="text-align:center; margin-top: 20px;"><button class="action-button" id="enter-universe-button">${bp.buttonText}</button></div></div>`;
                 
                 memoryPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text" id="popup-title"></div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div class="popup-visual"></div><div class="popup-text" id="popup-text"></div></div>`;
                 
@@ -762,24 +837,15 @@
                 );
                 if (isValid) {
                     closeWindowWithAnimation(passwordWindow, () => {
-                        openWindowWithAnimation(birthdayPopup);
+                        entryWrapper.style.display = 'none';
+                        desktopWrapper.style.display = 'block';
+                        initializeDesktop(content);
                     });
                 } else {
                     errorMessage.style.display = 'block';
                     passwordInput.value = '';
                 }
             });
-            
-            function enterTheUniverse() {
-                closeWindowWithAnimation(birthdayPopup, () => {
-                    entryWrapper.style.display = 'none';
-                    desktopWrapper.style.display = 'block';
-                    initializeDesktop(content);
-                });
-            }
-
-            birthdayPopup.querySelector('.close-button').addEventListener('click', enterTheUniverse);
-            document.getElementById('enter-universe-button').addEventListener('click', enterTheUniverse);
             
             document.addEventListener('click', (event) => {
                 if (desktopWrapper.style.display !== 'block') return;
@@ -1207,14 +1273,21 @@
                             <button id="xo-next-round-btn" class="btn hidden">Next Round</button>
                             <div id="xo-player-role-display"></div>
                         </div>
+                        <div id="xo-chat-container">
+                            <div id="xo-chat-messages"></div>
+                            <form id="xo-chat-input-form">
+                                <input type="text" id="xo-chat-input" placeholder="Say something..." autocomplete="off">
+                            </form>
+                        </div>
                     </div>
                 `;
 
                 container.querySelector('.xo-close-btn').addEventListener('click', hideXOGameAsFullscreen);
 
-                // --- Game Logic (adapted from xo.html) ---
+                // --- Game Logic (adapted from xo.html)---
                 const gameRef = database.ref('tic-tac-toe-game');
                 const playersRef = database.ref('tic-tac-toe-players');
+                const chatRef = database.ref('xo-chat');
 
                 const page1 = container.querySelector('#xo-page1');
                 const page2 = container.querySelector('#xo-page2');
@@ -1226,6 +1299,9 @@
                 const xPiecesDisplay = container.querySelector('#xo-x-pieces');
                 const oPiecesDisplay = container.querySelector('#xo-o-pieces');
                 const playerRoleDisplay = container.querySelector('#xo-player-role-display');
+                const chatMessagesContainer = container.querySelector('#xo-chat-messages');
+                const chatInputForm = container.querySelector('#xo-chat-input-form');
+                const chatInput = container.querySelector('#xo-chat-input');
 
                 let localGameState = {};
                 let myRole = 'Spectator';
@@ -1354,6 +1430,61 @@
                     }
                     return null;
                 };
+
+                // --- Chat Logic ---
+                // --- Chat Logic ---
+                chatInputForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const messageText = chatInput.value.trim();
+                    if (messageText && myRole !== 'Spectator') {
+                        const newMessageRef = chatRef.push();
+                        newMessageRef.set({
+                            username: myRole,
+                            text: messageText,
+                            timestamp: firebase.database.ServerValue.TIMESTAMP
+                        });
+                        chatInput.value = '';
+
+                        // Trim old messages to keep only the last 10
+                        chatRef.orderByChild('timestamp').once('value', snapshot => {
+                            if (snapshot.numChildren() > 10) {
+                                let updates = {};
+                                let count = 0;
+                                const limit = snapshot.numChildren() - 10;
+                                snapshot.forEach(child => {
+                                    if (count < limit) {
+                                        updates[child.key] = null;
+                                    }
+                                    count++;
+                                });
+                                chatRef.update(updates);
+                            }
+                        });
+                    }
+                });
+
+                // Listen for new messages
+                chatRef.orderByChild('timestamp').limitToLast(10).on('child_added', (snapshot) => {
+                    const message = snapshot.val();
+                    const messageKey = snapshot.key;
+                    // Avoid re-adding a message that's already there
+                    if (chatMessagesContainer.querySelector(`[data-key="${messageKey}"]`)) return;
+
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('chat-message');
+                    messageDiv.dataset.key = messageKey; // Add key for removal
+                    messageDiv.innerHTML = `<span class="username ${message.username}">${message.username}:</span> ${message.text}`;
+                    chatMessagesContainer.prepend(messageDiv);
+                });
+
+                // Listen for removed messages (due to trimming)
+                chatRef.on('child_removed', (snapshot) => {
+                    const messageKey = snapshot.key;
+                    const messageDiv = chatMessagesContainer.querySelector(`[data-key="${messageKey}"]`);
+                    if (messageDiv) {
+                        messageDiv.remove();
+                    }
+                });
 
                 chooseXBtn.addEventListener('click', () => handlePlayerAssignment('X'));
                 chooseOBtn.addEventListener('click', () => handlePlayerAssignment('O'));
