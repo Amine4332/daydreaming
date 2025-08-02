@@ -23,7 +23,7 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:10px;'><path d='M0,0 L0,28 L21,14 Z' style='fill:%23111;stroke:%23fff;stroke-width:1.5px;'/></svg>") 0 0, auto;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:10px;'><path d='M0,0 L0,28 L21,14 Z' style='fill:%2523111;stroke:%2523fff;stroke-width:1.5px;'/></svg>") 0 0, auto;
             touch-action: none;
         }
 
@@ -377,7 +377,7 @@
         }
 
         /* --- ENHANCED FINAL POPUP & RETRO AUDIO CONTROLS --- */
-        .final-popup-special; { 
+        .final-popup-special { 
             width: 90%; max-width: 650px; 
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); 
             border: 3px solid #FFB3C1; 
@@ -567,7 +567,7 @@
         /* --- XO GAME CHAT STYLES --- */
         #xo-chat-container {
             position: absolute;
-            bottom: 100px;
+            bottom: 70px;
             left: 10px;
             width: 280px;
             height: 120px;
@@ -705,10 +705,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <script src="https://w.soundcloud.com/player/api.js"></script>
-    <script>
+    <script type="text/javascript">
         // --- Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "AIzaSyCC23SltL1DPhTcXdZivR5sAKOc4o2l4K0",
+            apiKey: "AIzaSyCC23SltL1DPhTcXdZivR5sAKOc4o2l4K0", // IMPORTANT: Restrict this API key in Firebase Console (e.g., HTTP referer restrictions) to prevent abuse.
             authDomain: "manal-hbd.firebaseapp.com",
             databaseURL: "https://manal-hbd-default-rtdb.firebaseio.com",
             projectId: "manal-hbd",
@@ -777,38 +777,37 @@
             
             function populateWindows(content) {
                 const pw = content.passwordWindow;
-                passwordWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">${pw.title}</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div class="riddle"><p><em>${pw.riddleTitle}</em></p><p>${pw.riddleBody}</p></div><form id="password-form"><input type="text" id="password-input" placeholder="${pw.inputPlaceholder}" autofocus><div class="error-message" id="error-message">${pw.errorMessage}</div><div style="text-align: right;"><button class="action-button" type="submit">${pw.buttonText}</button></div></form></div>`;
+                passwordWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">${pw.title}</div><div class="title-bar-controls"><button class="close-button"></button></div></div><div class="window-body"><div class="riddle"><p><em>${pw.riddleTitle}</em></p><p>${pw.riddleBody}</p></div><form id="password-form"><input type="text" id="password-input" placeholder="${pw.inputPlaceholder}" autofocus><div class="error-message" id="error-message">${pw.errorMessage}</div><div style="text-align: right;"><button class="action-button" type="submit">${pw.buttonText}</button></div></form></div>`;
                 
-                memoryPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text" id="popup-title"></div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div class="popup-visual"></div><div class="popup-text" id="popup-text"></div></div>`;
+                memoryPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text" id="popup-title"></div><div class="title-bar-controls"><button class="close-button"></button></div></div><div class="window-body"><div class="popup-visual"></div><div class="popup-text" id="popup-text"></div></div>`;
                 
                 const fp = content.finalPopup;
-                finalPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text">${fp.title}</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div id="lyric-display"></div><div id="custom-audio-controls"><button id="play-pause-button">►</button><span id="current-time" class="time-display">0:00</span><div class="progress-bar"><div class="progress-bar-fill"></div></div><span id="total-duration" class="time-display">0:00</span></div><div id="soundcloud-player-container"></div></div>`;
+                finalPopup.innerHTML = `<div class="title-bar"><div class="title-bar-text">${fp.title}</div><div class="title-bar-controls"><button class="close-button"></button></div></div><div class="window-body"><div id="lyric-display"></div><div id="custom-audio-controls"><button id="play-pause-button">►</button><span id="current-time" class="time-display">0:00</span><div class="progress-bar"><div class="progress-bar-fill"></div></div><span id="total-duration" class="time-display">0:00</span></div><div id="soundcloud-player-container"></div></div>`;
 
-                chatWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">Secret Chat</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div id="username-selection"><p>Who are you?</p><button class="username-button" data-user="hadak">hadak</button><button class="username-button" data-user="hadik">hadik</button></div><div id="chat-interface"><div id="chat-messages"></div><form id="chat-input-area"><input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off"><button type="submit" id="chat-send-button">Send</button></form></div></div>`;
+                chatWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">Secret Chat</div><div class="title-bar-controls"><button class="close-button"></button></div></div><div class="window-body"><div id="username-selection"><p>Who are you?</p><button class="username-button" data-user="hadak">hadak</button><button class="username-button" data-user="hadik">hadik</button></div><div id="chat-interface"><div id="chat-messages"></div><form id="chat-input-area"><input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off"><button type="submit" id="chat-send-button">Send</button></form></div></div>`;
                 
-                checklistWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">Secret Checklist</div><div class="title-bar-controls"><button></button><button class="close-button"></button></div></div><div class="window-body"><div id="checklist-items"></div><form id="checklist-input-area"><input type="text" id="checklist-input" placeholder="A new dream..." autocomplete="off"><button type="submit" id="checklist-add-button">Add</button></form></div>`;
+                                checklistWindow.innerHTML = `<div class="title-bar"><div class="title-bar-text">Secret Checklist</div><div class="title-bar-controls"><button class="close-button"></button></div></div><div class="window-body"><div id="checklist-items"></div><form id="checklist-input-area"><input type="text" id="checklist-input" placeholder="A new dream..." autocomplete="off"><button type="submit" id="checklist-add-button">Add</button></form></div>`;
 
-                addMemoryWindow.innerHTML = `
+                                addMemoryWindow.innerHTML = `
                     <div class="title-bar">
                         <div class="title-bar-text">Create a New Memory</div>
-                        <div class="title-bar-controls"><button></button><button class="close-button"></button></div>
+                        <div class="title-bar-controls"><button class="close-button"></button></div>
                     </div>
                     <div class="window-body">
                         <form id="add-memory-form">
-                            <label for="memory-title">Title<br></label>
-                            <input type="text" id="memory-title" required>
+                            <label for="memory-title">Title<br /></label>
+                            <input type="text" id="memory-title" required />
                             
-                            <label for="memory-text"><br><br>Text<br></label>
+                            <label for="memory-text"><br /><br />Text<br /></label>
                             <textarea id="memory-text" required></textarea>
                             
-                            <label for="memory-visual"><br><br>Visual (Image URL)<br></label>
-                            <input type="text" id="memory-visual" placeholder="https://example.com/image.png" required>
+                            <label for="memory-visual"><br /><br />Visual (Image URL)<br /></label>
+                            <input type="text" id="memory-visual" placeholder="https://example.com/image.png" required />
                             
                             <div style="text-align: right;"><button class="action-button" type="submit">Create</button></div>
                         </form>
                     </div>`;
             }
-            
             populateWindows(content);
 
             const form = document.getElementById('password-form');
@@ -862,6 +861,8 @@
             let draggedWindow = null;
             let draggedIcon = null;
             let didMove = false;
+            let dragOffsetX = 0;
+            let dragOffsetY = 0;
             let chatUsername = localStorage.getItem('chatUsername') || null;
 
             let highestZIndex = 1000;
@@ -1304,15 +1305,11 @@
                 const chatInputForm = container.querySelector('#xo-chat-input-form');
                 const chatInput = container.querySelector('#xo-chat-input');
 
+                
+
                 let localGameState = {};
                 let myRole = 'Spectator';
                 let selectedPieceIndex = null;
-
-                const winningConditions = [
-                    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-                    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                    [0, 4, 8], [2, 4, 6]
-                ];
 
                 const handlePlayerAssignment = (chosenRole) => {
                     playersRef.get().then((snapshot) => {
@@ -1423,8 +1420,14 @@
                 };
                 
                 const checkWin = (board) => {
-                    for (const condition of winningConditions) {
-                        const [a, b, c] = condition;
+                    const winningConditions = [
+                        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                        [0, 4, 8], [2, 4, 6]             // Diagonals
+                    ];
+
+                    for (let i = 0; i < winningConditions.length; i++) {
+                        const [a, b, c] = winningConditions[i];
                         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
                             return board[a];
                         }
@@ -1711,8 +1714,6 @@
 
 
             // --- SOUNDCLOUD LYRIC ENGINE ---
-            let soundcloudWidget;
-            let lyricInterval;
 
             function startLyricEngine() {
                 if (lyricInterval) clearInterval(lyricInterval); 
