@@ -500,7 +500,7 @@
             --fg-color: #0f0; /* Classic green terminal */
             --accent-color: #f0f;
             --x-color: #0ff;
-            --o-color: #ff0;
+            --o-color: #FFB3C1;
         }
         #xo-fullscreen-container .window-body { /* This rule is likely not needed anymore as the game content is directly in the fullscreen container */
             background-color: var(--bg-color);
@@ -558,7 +558,7 @@
             font-size: 3rem; cursor: pointer; user-select: none;
         }
         #xo-fullscreen-container .cell.X { color: var(--x-color); }
-        #xo-fullscreen-container .cell.O { color: var(--o-color); }
+        #xo-fullscreen-container .cell.O { color: var(--o-color); font-size: 4rem; }
         #xo-fullscreen-container .cell.selected { background-color: #333; border-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
         #xo-fullscreen-container .celebrate { animation: celebrate-anim 0.5s infinite; }
         @keyframes celebrate-anim {
@@ -1153,7 +1153,8 @@
                 // Create the "Our Song" icon right from the start
                 const finalSongIconData = content.finalPopup.reopenIcon;
                 if (finalSongIconData) {
-                    if (!document.querySelector(`.desktop-icon[data-memory-id="${finalSongIconData.id}"]`)) {
+                    if (!document.querySelector(`.desktop-icon[data-memory-id="999"]`)) {
+                        finalSongIconData.id = 999;
                         finalSongIconData.position = { top: '75%', left: '50%' };
                         createIcon(finalSongIconData, false);
                     }
@@ -1266,7 +1267,7 @@
                         <h1>3-Piece<br>Tic-Tac-Toe</h1>
                         <div id="xo-player-choice-buttons">
                             <button id="xo-choose-x-btn" class="btn">Play as X</button>
-                            <button id="xo-choose-o-btn" class="btn">Play as O</button>
+                            <button id="xo-choose-o-btn" class="btn">Play as ♡</button>
                         </div>
                     </div>
                     <div id="xo-page2" class="page hidden">
@@ -1275,7 +1276,7 @@
                             <div id="xo-status-display">Player X's Turn</div>
                             <div id="xo-piece-tracker">
                                 <div id="xo-x-pieces">X placed: 0</div>
-                                <div id="xo-o-pieces">O placed: 0</div>
+                                <div id="xo-o-pieces">♡ placed: 0</div>
                             </div>
                             <div id="xo-game-board">
                                 ${Array(9).fill(0).map((_, i) => `<div class="cell" data-cell-index="${i}"></div>`).join('')}
@@ -1333,7 +1334,7 @@
 
                         page1.classList.add('hidden');
                         page2.classList.remove('hidden');
-                        playerRoleDisplay.textContent = `You are Player ${myRole}`;
+                        playerRoleDisplay.textContent = myRole === 'O' ? 'You are Player ♡' : `You are Player ${myRole}`;
 
                         if (myRole === 'X') {
                             const initialGameState = {
@@ -1366,28 +1367,29 @@
                     if (!localGameState.board) return;
 
                     cells.forEach((cell, index) => {
-                        cell.textContent = localGameState.board[index];
+                        const piece = localGameState.board[index];
+                        cell.textContent = piece === 'O' ? '♡' : piece;
                         cell.classList.remove('X', 'O', 'selected');
-                        if (localGameState.board[index]) {
-                            cell.classList.add(localGameState.board[index]);
+                        if (piece) {
+                            cell.classList.add(piece);
                         }
                     });
 
                     if (localGameState.winner) {
-                        statusDisplay.textContent = `Player ${localGameState.winner}'s Wins!`;
+                        statusDisplay.textContent = `Player ${localGameState.winner === 'O' ? '♡' : localGameState.winner}'s Wins!`;
                         statusDisplay.classList.add('celebrate');
                         nextRoundBtn.classList.remove('hidden');
                     } else if (!localGameState.gameActive) {
                         statusDisplay.textContent = 'Game Over!';
                         nextRoundBtn.classList.remove('hidden');
                     } else {
-                        statusDisplay.textContent = `Player ${localGameState.currentPlayer}'s Turn`;
+                        statusDisplay.textContent = `Player ${localGameState.currentPlayer === 'O' ? '♡' : localGameState.currentPlayer}'s Turn`;
                         statusDisplay.classList.remove('celebrate');
                         nextRoundBtn.classList.add('hidden');
                     }
                     
                     xPiecesDisplay.textContent = `X placed: ${localGameState.piecesOnBoard.X || 0}`;
-                    oPiecesDisplay.textContent = `O placed: ${localGameState.piecesOnBoard.O || 0}`;
+                    oPiecesDisplay.textContent = `♡ placed: ${localGameState.piecesOnBoard.O || 0}`;
                 };
 
                 const handleCellClick = (e) => {
@@ -1486,7 +1488,7 @@
                     messageDiv.dataset.key = messageKey; // Add key for removal logic
                     messageDiv.classList.add('chat-message');
                     messageDiv.classList.add(message.username === myRole ? 'sent' : 'received');
-                    messageDiv.innerHTML = `<span class="username ${message.username}">${message.username}:</span> ${message.text}`;
+                    messageDiv.innerHTML = `<span class="username ${message.username}">${message.username === 'O' ? '♡' : message.username}:</span> ${message.text}`;
                     chatMessagesContainer.prepend(messageDiv);
                 });
 
@@ -1723,6 +1725,8 @@
 
 
             // --- SOUNDCLOUD LYRIC ENGINE ---
+
+            let lyricInterval = null;
 
             function startLyricEngine() {
                 if (lyricInterval) clearInterval(lyricInterval); 
